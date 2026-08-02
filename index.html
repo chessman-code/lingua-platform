@@ -6,12 +6,17 @@
 <title>言葉 · LINGUA — 沉浸式多语种学习</title>
 <meta name="description" content="言葉 LINGUA — 英语、日语、韩语沉浸式在线学习平台。分级课程、互动训练、进度追踪、社区与成就。" />
 
+<!-- Distinctive typography: Fraunces (display), Newsreader (body), Noto Serif JP/KR for CJK character -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Noto+Serif+JP:wght@300;500;700;900&family=Noto+Serif+KR:wght@300;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+/* ============================================================
+   言葉 · LINGUA  —  Ink & Paper Editorial System
+   ============================================================ */
 :root{
+  /* Paper & ink */
   --paper:#f3ece0;
   --paper-2:#ece3d2;
   --paper-deep:#e4d8c2;
@@ -19,51 +24,105 @@
   --ink-soft:#4a4239;
   --ink-faint:#8a7d6b;
   --rule:#cdc0a6;
-  --en:#2c5fb8;
+
+  /* Language accents */
+  --en:#2c5fb8;       /* cobalt */
   --en-deep:#1d3f7a;
-  --ja:#c8443c;
+  --ja:#c8443c;       /* vermillion */
   --ja-deep:#8f2a24;
-  --ko:#5b3a8c;
+  --ko:#5b3a8c;       /* plum indigo */
   --ko-deep:#3a2259;
+
   --accent:var(--ja);
   --accent-deep:var(--ja-deep);
+
   --gold:#b8893a;
   --leaf:#5a7a3a;
+
   --serif:'Fraunces','Noto Serif JP','Noto Serif KR',serif;
   --body:'Newsreader','Noto Serif JP','Noto Serif KR',serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
+
   --maxw:1240px;
   --r:2px;
   --shadow:0 1px 0 rgba(27,24,20,.06), 0 18px 40px -28px rgba(27,24,20,.45);
 }
+
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.6;font-size:17px;overflow-x:hidden;font-feature-settings:"kern","liga","calt","onum";-webkit-font-smoothing:antialiased;transition:--accent .4s ease;}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(120% 80% at 85% -10%, rgba(200,68,60,.06), transparent 55%),radial-gradient(120% 80% at 0% 110%, rgba(44,95,184,.05), transparent 55%);mix-blend-mode:multiply;}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.5;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");mix-blend-mode:multiply;}
+body{
+  font-family:var(--body);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  font-size:17px;
+  overflow-x:hidden;
+  font-feature-settings:"kern","liga","calt","onum";
+  -webkit-font-smoothing:antialiased;
+  transition:--accent .4s ease;
+}
+
+/* Paper grain + faint ink-wash atmosphere */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:
+    radial-gradient(120% 80% at 85% -10%, rgba(200,68,60,.06), transparent 55%),
+    radial-gradient(120% 80% at 0% 110%, rgba(44,95,184,.05), transparent 55%);
+  mix-blend-mode:multiply;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.5;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode:multiply;
+}
+
 main, header, footer, section{position:relative;z-index:3}
+
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 img{max-width:100%;display:block}
+
+/* ===================== Typography ===================== */
 .display{font-family:var(--serif);font-weight:600;letter-spacing:-.02em;line-height:1.02}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-faint);display:inline-flex;align-items:center;gap:.7em;}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--ink-faint);display:inline-flex;align-items:center;gap:.7em;
+}
 .eyebrow::before{content:"";width:28px;height:1px;background:var(--rule)}
 .kicker-cn{font-family:'Noto Serif JP',serif;color:var(--accent);font-weight:500}
+
 h1{font-size:clamp(2.6rem,6.2vw,5.4rem)}
 h2{font-size:clamp(1.9rem,3.6vw,3.1rem);font-family:var(--serif);font-weight:600;letter-spacing:-.02em;line-height:1.08}
 h3{font-size:clamp(1.2rem,1.8vw,1.5rem);font-family:var(--serif);font-weight:600}
+
 .lead{font-size:clamp(1.05rem,1.4vw,1.25rem);color:var(--ink-soft);font-weight:300}
 .muted{color:var(--ink-faint)}
 .ja{font-family:'Noto Serif JP',serif}
 .kr{font-family:'Noto Serif KR',serif}
+
+/* Ink stroke divider */
+.ink-rule{height:2px;background:linear-gradient(90deg,var(--ink) 0%,var(--ink) 30%,transparent 100%);width:120px;border:0;margin:0}
+
+/* ===================== Layout ===================== */
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
 section{padding:clamp(70px,9vw,120px) 0}
 .section-head{margin-bottom:48px;max-width:680px}
 .section-head .eyebrow{margin-bottom:18px}
-.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(243,236,224,.82);border-bottom:1px solid rgba(205,192,166,.6);}
+
+/* ===================== Nav ===================== */
+.nav{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(10px);
+  background:rgba(243,236,224,.82);
+  border-bottom:1px solid rgba(205,192,166,.6);
+}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:var(--maxw);margin:0 auto;padding:0 28px}
 .brand{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:-.01em}
-.brand .seal{width:34px;height:34px;border-radius:6px;display:grid;place-items:center;background:var(--ink);color:var(--paper);font-family:'Noto Serif JP',serif;font-size:18px;transform:rotate(-3deg);box-shadow:var(--shadow);}
+.brand .seal{
+  width:34px;height:34px;border-radius:6px;display:grid;place-items:center;
+  background:var(--ink);color:var(--paper);font-family:'Noto Serif JP',serif;font-size:18px;
+  transform:rotate(-3deg);box-shadow:var(--shadow);
+}
 .brand small{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ink-faint);display:block;margin-top:2px;font-weight:400}
 .nav-links{display:flex;align-items:center;gap:30px}
 .nav-links a{font-size:14px;color:var(--ink-soft);position:relative;transition:color .25s}
@@ -71,7 +130,11 @@ section{padding:clamp(70px,9vw,120px) 0}
 .nav-links a:hover{color:var(--ink)}
 .nav-links a:hover::after{width:100%}
 .nav-cta{display:flex;align-items:center;gap:12px}
-.btn{font-family:var(--body);font-size:14px;font-weight:500;padding:9px 18px;border-radius:var(--r);border:1px solid var(--ink);background:transparent;color:var(--ink);transition:all .25s;display:inline-flex;align-items:center;gap:8px;}
+.btn{
+  font-family:var(--body);font-size:14px;font-weight:500;
+  padding:9px 18px;border-radius:var(--r);border:1px solid var(--ink);
+  background:transparent;color:var(--ink);transition:all .25s;display:inline-flex;align-items:center;gap:8px;
+}
 .btn:hover{background:var(--ink);color:var(--paper)}
 .btn-solid{background:var(--ink);color:var(--paper)}
 .btn-solid:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
@@ -80,6 +143,8 @@ section{padding:clamp(70px,9vw,120px) 0}
 .btn-ghost{border-color:var(--rule)}
 .btn-sm{padding:7px 14px;font-size:13px}
 .menu-toggle{display:none;font-size:22px}
+
+/* ===================== Hero ===================== */
 .hero{padding:clamp(60px,8vw,110px) 0 clamp(50px,6vw,80px);overflow:hidden}
 .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:60px;align-items:center}
 .hero h1{margin:22px 0 0}
@@ -90,8 +155,13 @@ section{padding:clamp(70px,9vw,120px) 0}
 .hero-meta{margin-top:46px;display:flex;gap:36px;flex-wrap:wrap}
 .hero-meta .stat .num{font-family:var(--serif);font-size:1.9rem;font-weight:600;line-height:1}
 .hero-meta .stat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;margin-top:6px}
+
+/* Language selector pills */
 .lang-select{display:flex;gap:10px;margin-top:30px;flex-wrap:wrap}
-.lang-pill{display:flex;align-items:center;gap:10px;padding:10px 18px;border:1px solid var(--rule);border-radius:40px;background:rgba(255,255,255,.3);transition:all .3s;position:relative;}
+.lang-pill{
+  display:flex;align-items:center;gap:10px;padding:10px 18px;border:1px solid var(--rule);
+  border-radius:40px;background:rgba(255,255,255,.3);transition:all .3s;position:relative;
+}
 .lang-pill .dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
 .lang-pill .name{font-family:var(--serif);font-weight:600;font-size:15px}
 .lang-pill .glyph{font-family:'Noto Serif JP',serif;font-size:18px;color:var(--ink-faint)}
@@ -99,8 +169,14 @@ section{padding:clamp(70px,9vw,120px) 0}
 .lang-pill.active{background:var(--ink);border-color:var(--ink)}
 .lang-pill.active .name,.lang-pill.active .glyph{color:var(--paper)}
 .lang-pill.active .dot{box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+
+/* Hero visual — layered cards */
 .hero-visual{position:relative;height:480px}
-.float-card{position:absolute;background:var(--paper-2);border:1px solid var(--rule);border-radius:8px;padding:22px;box-shadow:var(--shadow);animation:floaty 6s ease-in-out infinite;}
+.float-card{
+  position:absolute;background:var(--paper-2);border:1px solid var(--rule);
+  border-radius:8px;padding:22px;box-shadow:var(--shadow);
+  animation:floaty 6s ease-in-out infinite;
+}
 .float-card .cap{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:10px}
 .float-card .big{font-family:var(--serif);font-weight:700;font-size:2.1rem;line-height:1}
 .float-card .sub{font-size:13px;color:var(--ink-soft);margin-top:6px}
@@ -108,16 +184,34 @@ section{padding:clamp(70px,9vw,120px) 0}
 .fc-2{top:120px;right:10px;width:210px;animation-delay:1.2s}
 .fc-3{bottom:60px;left:50px;width:240px;animation-delay:2.4s}
 .fc-4{bottom:0;right:40px;width:180px;animation-delay:.6s}
-.fc-stamp{position:absolute;top:-14px;right:-14px;width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:'Noto Serif JP',serif;font-size:22px;font-weight:700;transform:rotate(8deg);box-shadow:var(--shadow);}
+.fc-stamp{
+  position:absolute;top:-14px;right:-14px;width:54px;height:54px;border-radius:50%;
+  background:var(--accent);color:#fff;display:grid;place-items:center;
+  font-family:'Noto Serif JP',serif;font-size:22px;font-weight:700;transform:rotate(8deg);
+  box-shadow:var(--shadow);
+}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-.marquee{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--paper-2);overflow:hidden;white-space:nowrap;padding:16px 0;}
+
+/* ===================== Marquee strip ===================== */
+.marquee{
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  background:var(--paper-2);overflow:hidden;white-space:nowrap;padding:16px 0;
+}
 .marquee-track{display:inline-flex;gap:48px;animation:scroll 38s linear infinite;font-family:var(--serif);font-size:1.05rem;color:var(--ink-soft)}
 .marquee-track span{display:inline-flex;align-items:center;gap:14px}
 .marquee-track .sep{color:var(--accent)}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ===================== Courses ===================== */
 .courses-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
-.course-card{background:var(--paper-2);border:1px solid var(--rule);border-radius:10px;padding:26px;position:relative;overflow:hidden;transition:all .35s;cursor:pointer;}
-.course-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform .4s;}
+.course-card{
+  background:var(--paper-2);border:1px solid var(--rule);border-radius:10px;
+  padding:26px;position:relative;overflow:hidden;transition:all .35s;cursor:pointer;
+}
+.course-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent);
+  transform:scaleY(0);transform-origin:top;transition:transform .4s;
+}
 .course-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--ink-faint)}
 .course-card:hover::before{transform:scaleY(1)}
 .course-card .lvl{display:flex;align-items:baseline;justify-content:space-between}
@@ -131,21 +225,33 @@ section{padding:clamp(70px,9vw,120px) 0}
 .course-card .meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--ink-faint);margin-top:8px;text-transform:uppercase}
 .course-card.locked{opacity:.55}
 .course-card.locked .code::after{content:" ✕";color:var(--ink-faint);font-size:1rem}
+
+/* ===================== Modules ===================== */
 .modules{background:var(--paper-2);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .module-tabs{display:flex;gap:6px;margin-bottom:30px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:0}
-.mtab{padding:14px 22px;font-family:var(--serif);font-weight:600;font-size:15px;color:var(--ink-faint);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .25s;display:flex;align-items:center;gap:8px;}
+.mtab{
+  padding:14px 22px;font-family:var(--serif);font-weight:600;font-size:15px;color:var(--ink-faint);
+  border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .25s;display:flex;align-items:center;gap:8px;
+}
 .mtab .num{font-family:var(--mono);font-size:10px;color:var(--ink-faint)}
 .mtab:hover{color:var(--ink)}
 .mtab.active{color:var(--ink);border-bottom-color:var(--accent)}
 .mtab.active .num{color:var(--accent)}
+
 .module-panel{display:none;animation:fadeUp .5s ease}
 .module-panel.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
 .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+
+/* ---- Vocabulary flip cards ---- */
 .vocab-stage{display:grid;place-items:center;min-height:300px;perspective:1400px}
 .flip-card{width:340px;height:230px;position:relative;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
 .flip-card.flipped{transform:rotateY(180deg)}
-.flip-face{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;display:grid;place-items:center;padding:30px;text-align:center;box-shadow:var(--shadow);}
+.flip-face{
+  position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;
+  display:grid;place-items:center;padding:30px;text-align:center;box-shadow:var(--shadow);
+}
 .flip-front{background:var(--paper);border:1px solid var(--ink)}
 .flip-front .word{font-family:var(--serif);font-size:2.6rem;font-weight:700;line-height:1}
 .flip-front .roman{font-family:var(--mono);font-size:12px;color:var(--ink-faint);margin-top:10px;letter-spacing:.15em}
@@ -153,19 +259,29 @@ section{padding:clamp(70px,9vw,120px) 0}
 .flip-back{background:var(--ink);color:var(--paper);transform:rotateY(180deg)}
 .flip-back .mean{font-family:var(--serif);font-size:1.5rem;font-weight:500}
 .flip-back .ex{font-size:13px;color:rgba(243,236,224,.7);margin-top:12px;font-style:italic}
+
 .vocab-controls{display:flex;gap:10px;justify-content:center;margin-top:24px;align-items:center}
 .vocab-meta{text-align:center;margin-top:18px}
 .sr-dots{display:flex;gap:6px;justify-content:center;margin-top:8px}
 .sr-dots i{width:7px;height:7px;border-radius:50%;background:var(--rule)}
 .sr-dots i.on{background:var(--accent)}
+
 .vocab-side .info-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px dashed var(--rule);font-size:14px}
 .vocab-side .info-row span:first-child{color:var(--ink-faint);font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+
+/* ---- Grammar exercise ---- */
 .grammar-q{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:28px;margin-bottom:18px}
 .grammar-q .qnum{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
 .grammar-q .sentence{font-family:var(--serif);font-size:1.4rem;margin:12px 0 22px;line-height:1.5}
-.grammar-q .sentence .blank{display:inline-block;min-width:80px;border-bottom:2px solid var(--ink);text-align:center;color:var(--accent);font-weight:600;margin:0 4px;}
+.grammar-q .sentence .blank{
+  display:inline-block;min-width:80px;border-bottom:2px solid var(--ink);
+  text-align:center;color:var(--accent);font-weight:600;margin:0 4px;
+}
 .grammar-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.opt{padding:14px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--paper-2);font-family:var(--serif);font-size:1rem;transition:all .2s;text-align:left;}
+.opt{
+  padding:14px 16px;border:1px solid var(--rule);border-radius:6px;background:var(--paper-2);
+  font-family:var(--serif);font-size:1rem;transition:all .2s;text-align:left;
+}
 .opt:hover{border-color:var(--ink);transform:translateX(3px)}
 .opt.correct{background:var(--leaf);color:#fff;border-color:var(--leaf)}
 .opt.wrong{background:var(--ja);color:#fff;border-color:var(--ja);opacity:.7}
@@ -173,11 +289,17 @@ section{padding:clamp(70px,9vw,120px) 0}
 .grammar-feedback.show{display:block;animation:fadeUp .3s}
 .grammar-feedback.ok{background:rgba(90,122,58,.12);border:1px solid var(--leaf);color:var(--leaf)}
 .grammar-feedback.no{background:rgba(200,68,60,.1);border:1px solid var(--ja);color:var(--ja-deep)}
+
+/* ---- Speaking practice ---- */
 .speak-stage{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:34px;text-align:center}
 .speak-target{font-family:var(--serif);font-size:2.4rem;font-weight:700;margin-bottom:6px}
 .speak-roman{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase}
 .speak-mean{color:var(--ink-soft);margin-top:10px}
-.mic-btn{width:96px;height:96px;border-radius:50%;border:2px solid var(--ink);background:var(--paper-2);display:grid;place-items:center;margin:28px auto 14px;transition:all .3s;position:relative;}
+.mic-btn{
+  width:96px;height:96px;border-radius:50%;border:2px solid var(--ink);
+  background:var(--paper-2);display:grid;place-items:center;margin:28px auto 14px;
+  transition:all .3s;position:relative;
+}
 .mic-btn:hover{transform:scale(1.05)}
 .mic-btn svg{width:34px;height:34px}
 .mic-btn.listening{background:var(--accent);border-color:var(--accent);color:#fff;animation:pulse 1.4s infinite}
@@ -191,9 +313,14 @@ section{padding:clamp(70px,9vw,120px) 0}
 .score-ring svg{transform:rotate(-90deg)}
 .score-ring .val{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);font-size:2rem;font-weight:700}
 .transcript{font-style:italic;color:var(--ink-soft);font-size:15px}
+
+/* ---- Listening ---- */
 .listen-stage{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:30px}
 .listen-controls{display:flex;align-items:center;gap:18px;margin-bottom:22px}
-.play-btn{width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;flex-shrink:0;transition:all .25s;box-shadow:var(--shadow);}
+.play-btn{
+  width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;
+  display:grid;place-items:center;flex-shrink:0;transition:all .25s;box-shadow:var(--shadow);
+}
 .play-btn:hover{background:var(--accent-deep);transform:scale(1.05)}
 .play-btn svg{width:24px;height:24px}
 .play-btn.playing{background:var(--ink)}
@@ -208,9 +335,12 @@ section{padding:clamp(70px,9vw,120px) 0}
 .listen-quiz .qq{font-family:var(--serif);font-weight:600;margin-bottom:12px}
 .listen-quiz .opts{display:grid;gap:8px}
 .listen-quiz .opt{background:var(--paper-2)}
+
 .browser-note{margin-top:18px;padding:12px 14px;background:rgba(184,137,58,.1);border:1px dashed var(--gold);border-radius:6px;font-size:13px;color:var(--ink-soft);display:flex;gap:10px;align-items:flex-start}
 .browser-note.show{display:flex}
 .browser-note:not(.show){display:none}
+
+/* ===================== Dashboard ===================== */
 .dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:30px}
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
 .kpi{background:var(--paper-2);border:1px solid var(--rule);border-radius:10px;padding:18px;position:relative;overflow:hidden}
@@ -219,6 +349,7 @@ section{padding:clamp(70px,9vw,120px) 0}
 .kpi .l{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-faint);text-transform:uppercase;margin-top:6px}
 .kpi .delta{font-size:12px;color:var(--leaf);margin-top:4px}
 .kpi .delta.down{color:var(--ja)}
+
 .chart-card{background:var(--paper-2);border:1px solid var(--rule);border-radius:10px;padding:24px}
 .chart-card h3{margin-bottom:6px}
 .chart-card .sub{font-size:13px;color:var(--ink-faint);margin-bottom:22px}
@@ -229,6 +360,7 @@ section{padding:clamp(70px,9vw,120px) 0}
 .bar .lbl{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink-faint)}
 .bar .val{position:absolute;top:-20px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink);opacity:0;transition:opacity .2s}
 .bar:hover .val{opacity:1}
+
 .streak-card{background:var(--ink);color:var(--paper);border-radius:10px;padding:24px;height:100%}
 .streak-card .flame{font-size:2.4rem}
 .streak-card .num{font-family:var(--serif);font-size:3.4rem;font-weight:700;line-height:1;margin:8px 0}
@@ -236,16 +368,22 @@ section{padding:clamp(70px,9vw,120px) 0}
 .streak-dots{display:flex;gap:5px;margin-top:22px}
 .streak-dots i{width:24px;height:24px;border-radius:50%;border:1px solid rgba(243,236,224,.3)}
 .streak-dots i.on{background:var(--accent);border-color:var(--accent)}
+
 .skills-radar{margin-top:18px}
 .skill-row{margin-bottom:14px}
 .skill-row .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
 .skill-row .top span:last-child{font-family:var(--mono);color:var(--ink-faint)}
 .skill-bar{height:6px;background:var(--paper-deep);border-radius:3px;overflow:hidden}
 .skill-bar > i{display:block;height:100%;background:var(--accent);border-radius:3px}
+
+/* ===================== Path recommendation ===================== */
 .path-section{background:linear-gradient(180deg,var(--paper) 0%,var(--paper-2) 100%)}
 .path-intro{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:40px}
 .path-flow{display:flex;gap:0;overflow-x:auto;padding-bottom:10px}
-.path-node{flex:0 0 220px;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:20px;position:relative;margin-right:30px;transition:all .3s;}
+.path-node{
+  flex:0 0 220px;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:20px;
+  position:relative;margin-right:30px;transition:all .3s;
+}
 .path-node:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
 .path-node .step{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.2em}
 .path-node .ptitle{font-family:var(--serif);font-weight:600;font-size:1.15rem;margin:8px 0}
@@ -255,6 +393,8 @@ section{padding:clamp(70px,9vw,120px) 0}
 .path-node:last-child::after{display:none}
 .path-node.done{border-color:var(--leaf)}
 .path-node.done .step::before{content:"✓ "}
+
+/* ===================== Community ===================== */
 .community-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:36px}
 .post-composer{background:var(--paper-2);border:1px solid var(--rule);border-radius:10px;padding:18px;margin-bottom:20px}
 .post-composer textarea{width:100%;background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:12px;font-family:var(--body);font-size:15px;resize:vertical;min-height:70px;color:var(--ink)}
@@ -263,6 +403,7 @@ section{padding:clamp(70px,9vw,120px) 0}
 .tag-pick{display:flex;gap:6px;flex-wrap:wrap}
 .tag-pick span{font-family:var(--mono);font-size:11px;padding:4px 9px;border:1px solid var(--rule);border-radius:20px;color:var(--ink-faint);cursor:pointer}
 .tag-pick span.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
 .post{background:var(--paper-2);border:1px solid var(--rule);border-radius:10px;padding:20px;margin-bottom:16px;transition:all .25s}
 .post:hover{border-color:var(--ink-faint)}
 .post-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
@@ -275,6 +416,7 @@ section{padding:clamp(70px,9vw,120px) 0}
 .post-foot button{display:flex;align-items:center;gap:5px;transition:color .2s}
 .post-foot button:hover{color:var(--accent)}
 .post-foot button.liked{color:var(--ja)}
+
 .side-card{background:var(--paper-2);border:1px solid var(--rule);border-radius:10px;padding:22px;margin-bottom:18px}
 .side-card h3{margin-bottom:14px;font-size:1.1rem}
 .group-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--rule)}
@@ -285,24 +427,39 @@ section{padding:clamp(70px,9vw,120px) 0}
 .group-item .join{margin-left:auto;font-family:var(--mono);font-size:10px;padding:5px 10px;border:1px solid var(--ink);border-radius:4px;transition:all .2s}
 .group-item .join:hover{background:var(--ink);color:var(--paper)}
 .group-item .join.joined{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+
+/* ===================== Achievements ===================== */
 .achievements{background:var(--ink);color:var(--paper)}
 .achievements .eyebrow{color:rgba(243,236,224,.5)}
 .achievements .eyebrow::before{background:rgba(243,236,224,.3)}
 .achievements h2{color:var(--paper)}
 .achievements .lead{color:rgba(243,236,224,.7)}
 .badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px;margin-top:40px}
-.badge{background:rgba(243,236,224,.04);border:1px solid rgba(243,236,224,.12);border-radius:12px;padding:24px 16px;text-align:center;transition:all .35s;position:relative;overflow:hidden;}
+.badge{
+  background:rgba(243,236,224,.04);border:1px solid rgba(243,236,224,.12);border-radius:12px;
+  padding:24px 16px;text-align:center;transition:all .35s;position:relative;overflow:hidden;
+}
 .badge:hover{transform:translateY(-4px);border-color:var(--accent)}
-.badge .seal-bg{width:72px;height:72px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;font-size:30px;font-family:'Noto Serif JP',serif;font-weight:700;background:radial-gradient(circle at 30% 30%, var(--accent), var(--accent-deep));box-shadow:0 6px 20px -6px var(--accent);}
+.badge .seal-bg{
+  width:72px;height:72px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;
+  font-size:30px;font-family:'Noto Serif JP',serif;font-weight:700;
+  background:radial-gradient(circle at 30% 30%, var(--accent), var(--accent-deep));
+  box-shadow:0 6px 20px -6px var(--accent);
+}
 .badge.locked{opacity:.4}
 .badge.locked .seal-bg{background:rgba(243,236,224,.1);box-shadow:none;color:rgba(243,236,224,.4)}
 .badge .bname{font-family:var(--serif);font-weight:600;font-size:15px}
 .badge .bdesc{font-size:11px;color:rgba(243,236,224,.5);margin-top:4px}
 .badge .lock-ic{position:absolute;top:10px;right:10px;font-size:12px;color:rgba(243,236,224,.3)}
+
+/* ===================== Auth modal ===================== */
 .modal-overlay{position:fixed;inset:0;background:rgba(27,24,20,.6);backdrop-filter:blur(6px);z-index:100;display:none;place-items:center;padding:20px;animation:fadeIn .3s}
 .modal-overlay.show{display:grid}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--paper);border-radius:14px;max-width:420px;width:100%;padding:40px;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);animation:popIn .4s cubic-bezier(.2,.9,.3,1.1);position:relative;}
+.modal{
+  background:var(--paper);border-radius:14px;max-width:420px;width:100%;padding:40px;
+  box-shadow:0 30px 80px -20px rgba(0,0,0,.5);animation:popIn .4s cubic-bezier(.2,.9,.3,1.1);position:relative;
+}
 @keyframes popIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 .modal .close{position:absolute;top:16px;right:18px;font-size:24px;color:var(--ink-faint)}
 .modal h2{margin-bottom:6px}
@@ -315,24 +472,34 @@ section{padding:clamp(70px,9vw,120px) 0}
 .modal-switch{text-align:center;margin-top:18px;font-size:13px;color:var(--ink-faint)}
 .modal-switch button{color:var(--accent);font-weight:600;text-decoration:underline}
 .auth-error{color:var(--ja);font-size:13px;margin-top:8px;min-height:18px}
+
+/* Logged-in state */
 .user-chip{display:none;align-items:center;gap:10px;padding:5px 14px 5px 5px;border:1px solid var(--rule);border-radius:40px;background:var(--paper-2)}
 .user-chip.show{display:flex}
 .user-chip .av{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:13px}
 .user-chip .un{font-size:13px;font-family:var(--serif);font-weight:600}
 .user-chip .logout{font-family:var(--mono);font-size:10px;color:var(--ink-faint);margin-left:4px}
 .nav-cta.logged .btn-auth{display:none}
+
+/* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--paper);padding:13px 22px;border-radius:8px;font-size:14px;z-index:200;box-shadow:var(--shadow);transition:transform .4s cubic-bezier(.2,.9,.3,1.1);font-family:var(--serif)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--leaf)}
 .toast.err{background:var(--ja-deep)}
+
+/* ===================== Footer ===================== */
 footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0 30px}
 .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
 .foot-col h4{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:16px}
 .foot-col a{display:block;font-size:14px;color:var(--ink-soft);padding:5px 0;transition:color .2s}
 .foot-col a:hover{color:var(--accent)}
 .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--rule);font-size:13px;color:var(--ink-faint);flex-wrap:wrap;gap:12px}
+
+/* ===================== Reveal animation ===================== */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
 .reveal.in{opacity:1;transform:translateY(0)}
+
+/* ===================== Responsive ===================== */
 @media (max-width:980px){
   .hero-grid,.panel-grid,.dash-grid,.community-grid,.path-intro{grid-template-columns:1fr;gap:40px}
   .hero-visual{height:380px}
@@ -349,10 +516,42 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
   .foot-grid{grid-template-columns:1fr}
   .flip-card{width:280px;height:200px}
 }
+
+/* ---- API 状态指示器 ---- */
+.api-status{width:8px;height:8px;border-radius:50%;background:var(--ink-faint);display:inline-block;transition:background .3s}
+.api-status.online{background:var(--leaf);box-shadow:0 0 6px var(--leaf)}
+.api-status.offline{background:var(--ja)}
+
+/* ---- 管理后台面板 ---- */
+.admin-overlay{position:fixed;inset:0;background:rgba(27,24,20,.7);backdrop-filter:blur(8px);z-index:150;display:none;place-items:center;padding:20px;animation:fadeIn .3s}
+.admin-overlay.show{display:grid}
+.admin-window{background:var(--paper);border-radius:14px;max-width:900px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 30px 80px -10px rgba(0,0,0,.5);animation:popIn .4s cubic-bezier(.2,.9,.3,1.1)}
+.admin-head{position:sticky;top:0;background:var(--paper);display:flex;justify-content:space-between;align-items:center;padding:24px 28px 16px;border-bottom:1px solid var(--rule);z-index:5}
+.admin-head h2{font-size:1.3rem}
+.admin-close{font-size:24px;color:var(--ink-faint);background:none;border:none;cursor:pointer}
+.api-base-info{font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.1em}
+.admin-stats{display:flex;gap:14px;padding:20px 28px;flex-wrap:wrap}
+.admin-stat{background:var(--paper-2);border:1px solid var(--rule);border-radius:8px;padding:14px 20px;flex:1;min-width:140px}
+.admin-stat .v{font-family:var(--serif);font-size:1.8rem;font-weight:700;line-height:1}
+.admin-stat .l{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-faint);text-transform:uppercase;margin-top:5px}
+.admin-tabs{display:flex;gap:4px;padding:0 28px;border-bottom:1px solid var(--rule)}
+.atab{padding:10px 18px;font-family:var(--serif);font-weight:600;font-size:14px;color:var(--ink-faint);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none}
+.atab.active{color:var(--ink);border-bottom-color:var(--accent)}
+.admin-body{padding:20px 28px}
+.admin-table{width:100%;border-collapse:collapse;font-size:14px}
+.admin-table th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--ink-faint);text-transform:uppercase;padding:10px 12px;border-bottom:1px solid var(--rule)}
+.admin-table td{padding:12px;border-bottom:1px dashed var(--rule)}
+.admin-table tr:hover{background:var(--paper-2)}
+.admin-table .badge-admin{display:inline-block;font-family:var(--mono);font-size:9px;padding:2px 6px;background:var(--accent);color:#fff;border-radius:3px;letter-spacing:.1em}
+.admin-empty{text-align:center;padding:40px;color:var(--ink-faint)}
+.api-banner{position:fixed;bottom:24px;right:24px;max-width:340px;background:var(--ink);color:var(--paper);padding:16px 20px;border-radius:10px;font-size:13px;z-index:180;box-shadow:var(--shadow);display:none;line-height:1.5}
+.api-banner.show{display:block}
+.api-banner code{background:rgba(255,255,255,.15);padding:2px 6px;border-radius:3px;font-family:var(--mono);font-size:12px}
 </style>
 </head>
 <body>
 
+<!-- ===================== NAV ===================== -->
 <header class="nav">
   <div class="nav-inner">
     <a href="#" class="brand">
@@ -368,6 +567,8 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
       <a href="#achievements">成就</a>
     </nav>
     <div class="nav-cta" id="navCta">
+      <span id="apiStatus" class="api-status" title="后端连接状态"></span>
+      <button class="btn btn-sm btn-accent" id="adminNav" style="display:none" onclick="toggleAdminPanel()">管理后台</button>
       <button class="btn btn-sm btn-auth" onclick="openAuth('login')">登录</button>
       <button class="btn btn-sm btn-solid btn-auth" onclick="openAuth('register')">注册</button>
       <div class="user-chip" id="userChip">
@@ -382,6 +583,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
 
 <main>
 
+<!-- ===================== HERO ===================== -->
 <section class="hero">
   <div class="wrap">
     <div class="hero-grid">
@@ -441,6 +643,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
   </div>
 </section>
 
+<!-- Marquee -->
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track">
     <span>あ い う え お</span><span class="sep">✺</span>
@@ -456,6 +659,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
   </div>
 </div>
 
+<!-- ===================== COURSES ===================== -->
 <section id="courses" class="reveal">
   <div class="wrap">
     <div class="section-head">
@@ -465,10 +669,12 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
     </div>
 
     <div class="courses-grid" id="coursesGrid">
+      <!-- injected by JS -->
     </div>
   </div>
 </section>
 
+<!-- ===================== MODULES ===================== -->
 <section id="modules" class="modules reveal">
   <div class="wrap">
     <div class="section-head">
@@ -483,6 +689,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
       <button class="mtab" data-mod="listen"><span class="num">04</span> 听力训练</button>
     </div>
 
+    <!-- VOCAB -->
     <div class="module-panel active" id="panel-vocab">
       <div class="panel-grid">
         <div>
@@ -527,6 +734,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
       </div>
     </div>
 
+    <!-- GRAMMAR -->
     <div class="module-panel" id="panel-grammar">
       <div class="panel-grid">
         <div>
@@ -555,6 +763,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
       </div>
     </div>
 
+    <!-- SPEAK -->
     <div class="module-panel" id="panel-speak">
       <div class="panel-grid">
         <div>
@@ -593,6 +802,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
       </div>
     </div>
 
+    <!-- LISTEN -->
     <div class="module-panel" id="panel-listen">
       <div class="panel-grid">
         <div>
@@ -633,6 +843,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
   </div>
 </section>
 
+<!-- ===================== DASHBOARD ===================== -->
 <section id="dashboard" class="reveal">
   <div class="wrap">
     <div class="section-head">
@@ -675,6 +886,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
   </div>
 </section>
 
+<!-- ===================== PATH ===================== -->
 <section id="path" class="path-section reveal">
   <div class="wrap">
     <div class="section-head">
@@ -700,6 +912,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
   </div>
 </section>
 
+<!-- ===================== COMMUNITY ===================== -->
 <section id="community" class="reveal">
   <div class="wrap">
     <div class="section-head">
@@ -762,6 +975,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
   </div>
 </section>
 
+<!-- ===================== ACHIEVEMENTS ===================== -->
 <section id="achievements" class="achievements reveal">
   <div class="wrap">
     <div class="section-head">
@@ -776,6 +990,28 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
 
 </main>
 
+<!-- ===================== 管理后台面板 ===================== -->
+<div class="admin-overlay" id="adminPanel">
+  <div class="admin-window">
+    <div class="admin-head">
+      <h2>管理后台 · 用户与登录</h2>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="api-base-info" id="apiBaseInfo"></span>
+        <button class="btn btn-sm btn-ghost" onclick="loadAdminData()">刷新</button>
+        <button class="admin-close" onclick="toggleAdminPanel()">×</button>
+      </div>
+    </div>
+    <div class="admin-stats" id="adminStats"></div>
+    <div class="admin-tabs">
+      <button class="atab active" data-atab="users" onclick="switchAdminTab('users')">注册用户</button>
+      <button class="atab" data-atab="logs" onclick="switchAdminTab('logs')">登录日志</button>
+    </div>
+    <div class="admin-body" id="adminUsers"></div>
+    <div class="admin-body" id="adminLogs" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
 <footer>
   <div class="wrap">
     <div class="foot-grid">
@@ -794,6 +1030,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
   </div>
 </footer>
 
+<!-- ===================== AUTH MODAL ===================== -->
 <div class="modal-overlay" id="authModal">
   <div class="modal">
     <button class="close" onclick="closeAuth()">×</button>
@@ -812,13 +1049,68 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
 
 <div class="toast" id="toast"></div>
 
+<div class="api-banner" id="apiBanner">
+  <strong>离线模式</strong><br>
+  后端服务未连接，当前为本地浏览器存储模式。注册/登录数据仅存于本设备。<br>
+  <span style="font-size:12px;color:rgba(243,236,224,.6)">部署后端后可跨设备同步、查看所有用户登录记录。API 地址: <code id="bannerApiBase">localhost:3001</code></span>
+  <br><button onclick="dismissApiBanner()" style="margin-top:8px;font-size:12px;color:var(--accent);text-decoration:underline;background:none;border:none;cursor:pointer">知道了，不再提示</button>
+</div>
+
 <script>
-const STATE = { lang: 'ja', user: null, vocabIdx: 0, grammarIdx: 0, listenIdx: 0, listenSpeed: 1, listening: false, recog: null, speakIdx: 0 };
+/* ============================================================
+   言葉 LINGUA — App Logic
+   ============================================================ */
+
+/* ---------- State ---------- */
+const STATE = {
+  lang: 'ja',
+  user: null,
+  token: null,
+  apiOnline: false,
+  vocabIdx: 0,
+  grammarIdx: 0,
+  listenIdx: 0,
+  listenSpeed: 1,
+  listening: false,
+  recog: null,
+  speakIdx: 0,
+};
+
+/* ---------- API 配置 ---------- */
+// 优先级：URL参数 ?api= > localStorage > 默认本地
+const API_BASE = new URLSearchParams(location.search).get('api')
+  || localStorage.getItem('lingua_api_base')
+  || 'http://localhost:3001';
+
+async function api(path, opts = {}) {
+  const token = STATE.token || localStorage.getItem('lingua_token') || '';
+  const res = await fetch(API_BASE + path, {
+    ...opts,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: 'Bearer ' + token } : {}),
+      ...(opts.headers || {}),
+    },
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  return { ok: res.ok, status: res.status, data: await res.json().catch(() => ({})) };
+}
+
+async function checkApi() {
+  try {
+    const r = await fetch(API_BASE + '/api/health', { timeout: 3000 });
+    STATE.apiOnline = r.ok;
+  } catch { STATE.apiOnline = false; }
+  return STATE.apiOnline;
+}
+
 const LANG_META = {
   ja:{ name:'日本語', glyph:'あ', accent:'var(--ja)', accentDeep:'var(--ja-deep)', cefr:'JLPT', tts:'ja-JP' },
   en:{ name:'English', glyph:'A', accent:'var(--en)', accentDeep:'var(--en-deep)', cefr:'CEFR', tts:'en-US' },
   ko:{ name:'한국어', glyph:'가', accent:'var(--ko)', accentDeep:'var(--ko-deep)', cefr:'TOPIK', tts:'ko-KR' },
 };
+
+/* ---------- Data: per-language content ---------- */
 const DATA = {
   ja:{
     vocab:[
@@ -893,6 +1185,8 @@ const DATA = {
     ],
   },
 };
+
+/* ---------- Courses ---------- */
 const COURSES = [
   {code:'A1', cefr:'入门 · Starter', title:'五十音 / 字母', desc:'假名、字母、发音规则与基础问候。', prog:100, locked:false},
   {code:'A2', cefr:'基础 · Elementary', title:'日常表达', desc:'自我介绍、数字、时间、简单对话。', prog:78, locked:false},
@@ -901,6 +1195,8 @@ const COURSES = [
   {code:'C1', cefr:'高级 · Advanced', title:'流利运用', desc:'抽象话题、长篇阅读、辩论。', prog:0, locked:true},
   {code:'C2', cefr:'精通 · Mastery', title:'母语水平', desc:'文学、专业领域、文化精微。', prog:0, locked:true},
 ];
+
+/* ---------- Achievements ---------- */
 const BADGES = [
   {g:'初', n:'初啼之声', d:'完成第一节课', got:true},
   {g:'七', n:'七日不辍', d:'连续学习 7 天', got:true},
@@ -919,6 +1215,8 @@ const BADGES = [
   {g:'C1', n:'C1 通过', d:'通过高级测评', got:false},
   {g:'極', n:'語学の極', d:'达成全部里程碑', got:false},
 ];
+
+/* ---------- Path nodes ---------- */
 const PATH = [
   {step:'STEP 01', t:'听力 · 问路场景', d:'5 段关西问路对话，变速精听。', why:'听力低于均值 18%', done:true},
   {step:'STEP 02', t:'词汇 · 旅行必备', d:'20 个车站/餐厅高频词，间隔重复。', why:'主题偏好：旅行', done:true},
@@ -926,12 +1224,18 @@ const PATH = [
   {step:'STEP 04', t:'语法 · 请求表达', d:'〜てください / 〜てもいいですか', why:'本周语法弱点', done:false},
   {step:'STEP 05', t:'听力 · 听写测验', d:'逐句听写，巩固场景。', why:'闭环复习', done:false},
 ];
+
+/* ---------- Community seed ---------- */
 let POSTS = [
   {who:'林同学', av:'林', when:'12 分钟前', tag:'打卡', body:'第 42 天打卡！今天把「〜て」的因果用法彻底搞明白了，原来后项不能是意志表达。語学は日々の積み重ね。', likes:24, liked:false},
   {who:'Aki', av:'A', when:'1 小时前', tag:'提问', body:'N3 听力总是抓不住数字，大家有什么训练方法吗？尤其是电话号码和价格那种连读。', likes:8, liked:false},
   {who:'소라', av:'소', when:'3 小时前', tag:'分享', body:'推荐一部适合 N4 的日剧《孤独的美食家》，台词简单、节奏慢、还能学到点餐表达。看完一集顺带练了听力。', likes:46, liked:false},
 ];
-function init(){
+
+/* ============================================================
+   INIT
+   ============================================================ */
+async function init(){
   applyLang('ja');
   renderCourses();
   renderVocab();
@@ -946,27 +1250,52 @@ function init(){
   setupLangSelect();
   setupReveal();
   setupSpeed();
+  await checkApi();
+  updateApiStatus();
   restoreUser();
 }
+
+/* ---------- Language switching ---------- */
 function applyLang(lang){
   STATE.lang = lang;
   const m = LANG_META[lang];
   document.documentElement.style.setProperty('--accent', m.accent);
   document.documentElement.style.setProperty('--accent-deep', m.accentDeep);
+  // update active pill
   document.querySelectorAll('.lang-pill').forEach(p=>p.classList.toggle('active', p.dataset.lang===lang));
+  // refresh content
   STATE.vocabIdx=0; STATE.grammarIdx=0; STATE.listenIdx=0; STATE.speakIdx=0;
   renderVocab(); renderGrammar(); renderListen(); renderSpeak();
+  // side info
   const vs = document.getElementById('vsLang'); if(vs) vs.textContent = m.name + ' (' + m.cefr + ')';
   const sp = document.getElementById('spLang'); if(sp) sp.textContent = m.name;
 }
+
 function setupLangSelect(){
-  document.querySelectorAll('.lang-pill').forEach(p=>{ p.addEventListener('click', ()=>applyLang(p.dataset.lang)); });
+  document.querySelectorAll('.lang-pill').forEach(p=>{
+    p.addEventListener('click', ()=>applyLang(p.dataset.lang));
+  });
 }
+
+/* ---------- Courses ---------- */
 function renderCourses(){
   const grid = document.getElementById('coursesGrid');
-  grid.innerHTML = COURSES.map(c=>`<div class="course-card ${c.locked?'locked':''}" onclick="openCourse('${c.code}')"><div class="lvl"><span class="code">${c.code}</span><span class="cefr">${c.cefr}</span></div><div class="title">${c.title}</div><div class="desc">${c.desc}</div><div class="progress-wrap"><div class="progress-bar"><i style="width:${c.prog}%"></i></div><div class="meta"><span>${c.prog}% 完成</span><span>${c.locked?'未解锁':'进行中'}</span></div></div></div>`).join('');
+  grid.innerHTML = COURSES.map(c=>`
+    <div class="course-card ${c.locked?'locked':''}" onclick="openCourse('${c.code}')">
+      <div class="lvl"><span class="code">${c.code}</span><span class="cefr">${c.cefr}</span></div>
+      <div class="title">${c.title}</div>
+      <div class="desc">${c.desc}</div>
+      <div class="progress-wrap">
+        <div class="progress-bar"><i style="width:${c.prog}%"></i></div>
+        <div class="meta"><span>${c.prog}% 完成</span><span>${c.locked?'未解锁':'进行中'}</span></div>
+      </div>
+    </div>`).join('');
 }
-function openCourse(code){ toast(`已进入 ${code} 课程 · ` + (STATE.user?('欢迎回来，'+STATE.user.name):'登录后可保存进度'), 'ok'); }
+function openCourse(code){
+  toast(`已进入 ${code} 课程 · ` + (STATE.user?('欢迎回来，'+STATE.user.name):'登录后可保存进度'), 'ok');
+}
+
+/* ---------- Module tabs ---------- */
 function setupTabs(){
   document.querySelectorAll('.mtab').forEach(t=>{
     t.addEventListener('click', ()=>{
@@ -977,6 +1306,8 @@ function setupTabs(){
     });
   });
 }
+
+/* ---------- Vocabulary ---------- */
 function renderVocab(){
   const d = DATA[STATE.lang].vocab;
   const v = d[STATE.vocabIdx];
@@ -986,6 +1317,7 @@ function renderVocab(){
   document.getElementById('vocabMean').textContent = v.mean;
   document.getElementById('vocabEx').textContent = v.ex;
   document.getElementById('vocabIdx').textContent = `第 ${STATE.vocabIdx+1} / ${d.length} 张`;
+  // sr dots
   const dots = document.getElementById('srDots');
   dots.innerHTML = d.map((_,i)=>`<i class="${i<=STATE.vocabIdx?'on':''}"></i>`).join('');
   document.getElementById('flipCard').classList.remove('flipped');
@@ -995,6 +1327,8 @@ function vocabNext(){ const d=DATA[STATE.lang].vocab; STATE.vocabIdx=(STATE.voca
 function vocabPrev(){ const d=DATA[STATE.lang].vocab; STATE.vocabIdx=(STATE.vocabIdx-1+d.length)%d.length; renderVocab(); }
 function markKnown(){ toast('已标记「认识」· 复现间隔延长至次日','ok'); vocabNext(); }
 function markUnknown(){ toast('已标记「不熟」· 10 分钟后再次出现','err'); vocabNext(); }
+
+/* ---------- Grammar ---------- */
 function renderGrammar(){
   const d = DATA[STATE.lang].grammar;
   const g = d[STATE.grammarIdx];
@@ -1020,6 +1354,8 @@ function answerGrammar(opt){
 }
 function grammarNext(){ const d=DATA[STATE.lang].grammar; STATE.grammarIdx=(STATE.grammarIdx+1)%d.length; renderGrammar(); }
 function grammarPrev(){ const d=DATA[STATE.lang].grammar; STATE.grammarIdx=(STATE.grammarIdx-1+d.length)%d.length; renderGrammar(); }
+
+/* ---------- Speaking ---------- */
 function renderSpeak(){
   const d = DATA[STATE.lang].speak;
   const s = d[STATE.speakIdx];
@@ -1041,6 +1377,7 @@ function toggleMic(){
   if(STATE.listening){ stopRecog(); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SR){
+    // fallback: simulate scoring for browsers without recognition
     document.getElementById('speakNote').classList.add('show');
     simulateSpeak(); return;
   }
@@ -1052,26 +1389,42 @@ function toggleMic(){
   STATE.listening = true;
   document.getElementById('micBtn').classList.add('listening');
   document.getElementById('speakStatus').textContent='聆听中… 请跟读';
-  recog.onresult = (e)=>{ const transcript = e.results[0][0].transcript.trim(); scoreSpeak(transcript); };
-  recog.onerror = (e)=>{ STATE.listening=false; document.getElementById('micBtn').classList.remove('listening'); document.getElementById('speakStatus').textContent='识别出错，使用模拟评测'; simulateSpeak(); };
-  recog.onend = ()=>{ STATE.listening=false; document.getElementById('micBtn').classList.remove('listening'); };
+  recog.onresult = (e)=>{
+    const transcript = e.results[0][0].transcript.trim();
+    scoreSpeak(transcript);
+  };
+  recog.onerror = (e)=>{
+    STATE.listening=false;
+    document.getElementById('micBtn').classList.remove('listening');
+    document.getElementById('speakStatus').textContent='识别出错，使用模拟评测';
+    simulateSpeak();
+  };
+  recog.onend = ()=>{
+    STATE.listening=false;
+    document.getElementById('micBtn').classList.remove('listening');
+  };
   try{ recog.start(); }catch(err){ simulateSpeak(); }
 }
 function stopRecog(){ if(STATE.recog){ try{STATE.recog.stop();}catch(e){} } STATE.listening=false; document.getElementById('micBtn').classList.remove('listening'); document.getElementById('speakStatus').textContent='已停止'; }
 function simulateSpeak(){
   document.getElementById('speakStatus').textContent='模拟评测中…';
-  setTimeout(()=>{ const target = DATA[STATE.lang].speak[STATE.speakIdx].t; scoreSpeak(target); }, 900);
+  setTimeout(()=>{
+    const target = DATA[STATE.lang].speak[STATE.speakIdx].t;
+    scoreSpeak(target);
+  }, 900);
 }
 function scoreSpeak(transcript){
   const target = DATA[STATE.lang].speak[STATE.speakIdx].t;
+  // similarity: normalized char overlap
   let score = similarity(transcript, target);
   score = Math.max(0.55, Math.min(0.99, score + 0.25 + Math.random()*0.12));
   const pct = Math.round(score*100);
   const arc = document.getElementById('scoreArc');
   const val = document.getElementById('scoreVal');
   document.getElementById('speakResult').classList.add('show');
-  document.getElementById('transcript').textContent = '"'+transcript+'"';
+  document.getElementById('transcript').textContent = '“'+transcript+'”';
   document.getElementById('speakStatus').textContent = pct>=80?'发音很棒！':(pct>=65?'不错，继续练习':'再多读几遍');
+  // animate arc
   const len = 327; const offset = len*(1-pct/100);
   let cur=0; const step=()=>{ cur+=2; if(cur>pct){cur=pct;} val.textContent=cur; arc.style.strokeDashoffset = len*(1-cur/100); if(cur<pct) requestAnimationFrame(step); };
   step();
@@ -1090,6 +1443,8 @@ function playDemoSpeak(){
   speak(target, 1);
   toast('正在播放示范发音','ok');
 }
+
+/* ---------- Listening (Web Speech Synthesis) ---------- */
 function renderListen(){
   const d = DATA[STATE.lang].listen;
   const l = d[STATE.listenIdx];
@@ -1097,6 +1452,7 @@ function renderListen(){
   document.getElementById('listenText').textContent = '点击播放，聆听一段对话…';
   document.getElementById('lQuestion').textContent = l.q;
   document.getElementById('lOptions').innerHTML = l.opts.map((o,i)=>`<button class="opt" onclick="answerListen(${i})">${o}</button>`).join('');
+  // waveform
   const wf = document.getElementById('waveform');
   wf.innerHTML = Array.from({length:28}).map(()=>`<i style="height:${20+Math.random()*70}%"></i>`).join('');
   resetPlayUI();
@@ -1121,7 +1477,10 @@ function togglePlay(){
   playBtn.classList.add('playing');
   playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
   document.getElementById('listenText').textContent = '♪ 播放中…';
-  speak(text, STATE.listenSpeed, ()=>{ resetPlayUI(); stopWave(); document.getElementById('listenText').textContent = l.text; });
+  speak(text, STATE.listenSpeed, ()=>{
+    resetPlayUI(); stopWave();
+    document.getElementById('listenText').textContent = l.text;
+  });
   startWave();
 }
 function speak(text, rate, onend){
@@ -1131,6 +1490,7 @@ function speak(text, rate, onend){
   u.lang = LANG_META[STATE.lang].tts;
   u.rate = rate || 1;
   u.pitch = 1;
+  // try to pick a matching voice
   const voices = window.speechSynthesis.getVoices();
   const v = voices.find(x=>x.lang===u.lang) || voices.find(x=>x.lang.startsWith(STATE.lang));
   if(v) u.voice = v;
@@ -1142,36 +1502,97 @@ let waveTimer=null, waveIdx=0;
 function startWave(){
   const bars = document.querySelectorAll('#waveform i');
   waveIdx=0;
-  waveTimer = setInterval(()=>{ bars.forEach((b,i)=>{ const dist = Math.abs(i-waveIdx); b.classList.toggle('active', dist<4); }); waveIdx = (waveIdx+1) % bars.length; }, 90);
+  waveTimer = setInterval(()=>{
+    bars.forEach((b,i)=>{
+      const dist = Math.abs(i-waveIdx);
+      b.classList.toggle('active', dist<4);
+    });
+    waveIdx = (waveIdx+1) % bars.length;
+  }, 90);
 }
 function stopWave(){ if(waveTimer){ clearInterval(waveTimer); waveTimer=null; } document.querySelectorAll('#waveform i').forEach(b=>b.classList.remove('active')); }
 function setupSpeed(){
-  document.querySelectorAll('.spd').forEach(s=>{ s.addEventListener('click', ()=>{ document.querySelectorAll('.spd').forEach(x=>x.classList.remove('active')); s.classList.add('active'); STATE.listenSpeed = parseFloat(s.dataset.spd); }); });
+  document.querySelectorAll('.spd').forEach(s=>{
+    s.addEventListener('click', ()=>{
+      document.querySelectorAll('.spd').forEach(x=>x.classList.remove('active'));
+      s.classList.add('active');
+      STATE.listenSpeed = parseFloat(s.dataset.spd);
+    });
+  });
 }
 function answerListen(i){
   const d = DATA[STATE.lang].listen;
   const l = d[STATE.listenIdx];
-  document.querySelectorAll('#lOptions .opt').forEach((b,bi)=>{ b.style.pointerEvents='none'; if(bi===l.ans) b.classList.add('correct'); else if(bi===i) b.classList.add('wrong'); });
+  document.querySelectorAll('#lOptions .opt').forEach((b,bi)=>{
+    b.style.pointerEvents='none';
+    if(bi===l.ans) b.classList.add('correct');
+    else if(bi===i) b.classList.add('wrong');
+  });
   if(i===l.ans) toast('听力理解正确 +20 XP','ok');
   else toast('再听一遍试试','err');
-  setTimeout(()=>{ STATE.listenIdx=(STATE.listenIdx+1)%d.length; renderListen(); }, 1600);
+  setTimeout(()=>{
+    STATE.listenIdx=(STATE.listenIdx+1)%d.length; renderListen();
+  }, 1600);
 }
+
+/* ---------- Dashboard ---------- */
 function renderDashboard(){
-  const week = [28, 42, 15, 35, 50, 22, 33];
+  const week = [28, 42, 15, 35, 50, 22, 33]; // minutes
   const days = ['一','二','三','四','五','六','日'];
-  const today = 4;
-  document.getElementById('weekBars').innerHTML = week.map((m,i)=>`<div class="bar ${i===today?'today':''}" style="height:0%" data-h="${Math.min(100, m*1.8)}"><span class="val">${m}m</span><span class="lbl">${days[i]}</span></div>`).join('');
-  setTimeout(()=>{ document.querySelectorAll('#weekBars .bar').forEach(b=>{ b.style.height = b.dataset.h+'%'; }); }, 300);
+  const today = 4; // friday
+  document.getElementById('weekBars').innerHTML = week.map((m,i)=>`
+    <div class="bar ${i===today?'today':''}" style="height:0%" data-h="${Math.min(100, m*1.8)}">
+      <span class="val">${m}m</span>
+      <span class="lbl">${days[i]}</span>
+    </div>`).join('');
+  setTimeout(()=>{
+    document.querySelectorAll('#weekBars .bar').forEach(b=>{ b.style.height = b.dataset.h+'%'; });
+  }, 300);
+
+  // streak dots (last 7)
   document.getElementById('streakDots').innerHTML = [1,1,1,1,1,1,1].map(()=>`<i class="on"></i>`).join('');
-  const skills = [ {n:'阅读', v:78}, {n:'听力', v:60}, {n:'口语', v:58}, {n:'写作', v:72}, {n:'词汇', v:81} ];
-  document.getElementById('skillsRadar').innerHTML = skills.map(s=>`<div class="skill-row"><div class="top"><span>${s.n}</span><span>${s.v}%</span></div><div class="skill-bar"><i style="width:0%" data-w="${s.v}"></i></div></div>`).join('');
-  setTimeout(()=>{ document.querySelectorAll('.skill-bar > i').forEach(b=>{ b.style.width = b.dataset.w+'%'; }); }, 400);
+
+  // skills
+  const skills = [
+    {n:'阅读', v:78}, {n:'听力', v:60}, {n:'口语', v:58}, {n:'写作', v:72}, {n:'词汇', v:81},
+  ];
+  document.getElementById('skillsRadar').innerHTML = skills.map(s=>`
+    <div class="skill-row">
+      <div class="top"><span>${s.n}</span><span>${s.v}%</span></div>
+      <div class="skill-bar"><i style="width:0%" data-w="${s.v}"></i></div>
+    </div>`).join('');
+  setTimeout(()=>{
+    document.querySelectorAll('.skill-bar > i').forEach(b=>{ b.style.width = b.dataset.w+'%'; });
+  }, 400);
 }
+
+/* ---------- Path ---------- */
 function renderPath(){
-  document.getElementById('pathFlow').innerHTML = PATH.map(p=>`<div class="path-node ${p.done?'done':''}"><div class="step">${p.step}</div><div class="ptitle">${p.t}</div><div class="pdesc">${p.d}</div><div class="why">推荐理由：${p.why}</div></div>`).join('');
+  document.getElementById('pathFlow').innerHTML = PATH.map(p=>`
+    <div class="path-node ${p.done?'done':''}">
+      <div class="step">${p.step}</div>
+      <div class="ptitle">${p.t}</div>
+      <div class="pdesc">${p.d}</div>
+      <div class="why">推荐理由：${p.why}</div>
+    </div>`).join('');
 }
+
+/* ---------- Community ---------- */
 function renderCommunity(){
-  document.getElementById('postList').innerHTML = POSTS.map((p,i)=>`<div class="post"><div class="post-head"><div class="avatar">${p.av}</div><div class="who">${p.who}<small>${p.when}</small></div><span class="post-tag">#${p.tag}</span></div><div class="post-body">${p.body}</div><div class="post-foot"><button class="${p.liked?'liked':''}" onclick="likePost(${i})">♥ <span>${p.likes}</span></button><button>💬 评论</button><button>↗ 分享</button></div></div>`).join('');
+  document.getElementById('postList').innerHTML = POSTS.map((p,i)=>`
+    <div class="post">
+      <div class="post-head">
+        <div class="avatar">${p.av}</div>
+        <div class="who">${p.who}<small>${p.when}</small></div>
+        <span class="post-tag">#${p.tag}</span>
+      </div>
+      <div class="post-body">${p.body}</div>
+      <div class="post-foot">
+        <button class="${p.liked?'liked':''}" onclick="likePost(${i})">♥ <span>${p.likes}</span></button>
+        <button>💬 评论</button>
+        <button>↗ 分享</button>
+      </div>
+    </div>`).join('');
 }
 function likePost(i){ POSTS[i].liked=!POSTS[i].liked; POSTS[i].likes+=POSTS[i].liked?1:-1; renderCommunity(); }
 function publishPost(){
@@ -1186,11 +1607,30 @@ function publishPost(){
   renderCommunity();
   toast('已发布 · 获得社群徽章进度 +1','ok');
 }
-function joinGroup(btn){ if(btn.classList.contains('joined')) return; btn.classList.add('joined'); btn.textContent='已加入'; toast('已加入小组','ok'); }
-document.addEventListener('click',(e)=>{ if(e.target.closest('#tagPick span')){ document.querySelectorAll('#tagPick span').forEach(s=>s.classList.remove('active')); e.target.closest('#tagPick span').classList.add('active'); } });
-function renderBadges(){
-  document.getElementById('badgeGrid').innerHTML = BADGES.map(b=>`<div class="badge ${b.got?'':'locked'}">${b.got?'':'<div class="lock-ic">🔒</div>'}<div class="seal-bg">${b.g}</div><div class="bname">${b.n}</div><div class="bdesc">${b.d}</div></div>`).join('');
+function joinGroup(btn){
+  if(btn.classList.contains('joined')) return;
+  btn.classList.add('joined'); btn.textContent='已加入';
+  toast('已加入小组','ok');
 }
+document.addEventListener('click',(e)=>{
+  if(e.target.closest('#tagPick span')){
+    document.querySelectorAll('#tagPick span').forEach(s=>s.classList.remove('active'));
+    e.target.closest('#tagPick span').classList.add('active');
+  }
+});
+
+/* ---------- Badges ---------- */
+function renderBadges(){
+  document.getElementById('badgeGrid').innerHTML = BADGES.map(b=>`
+    <div class="badge ${b.got?'':'locked'}">
+      ${b.got?'':'<div class="lock-ic">🔒</div>'}
+      <div class="seal-bg">${b.g}</div>
+      <div class="bname">${b.n}</div>
+      <div class="bdesc">${b.d}</div>
+    </div>`).join('');
+}
+
+/* ---------- Auth ---------- */
 function openAuth(mode){
   const modal = document.getElementById('authModal');
   const isReg = mode==='register';
@@ -1198,12 +1638,12 @@ function openAuth(mode){
   document.getElementById('authSub').textContent = isReg?'注册即可保存进度、解锁个性路径':'登录以同步你的学习进度';
   document.getElementById('regFields').style.display = isReg?'block':'none';
   document.getElementById('authSubmit').textContent = isReg?'注册':'登录';
-  document.getElementById('authSwitch').innerHTML = isReg?'已有账号？<button onclick="openAuth(\\'login\\')">直接登录</button>':'还没有账号？<button onclick="openAuth(\\'register\\')">立即注册</button>';
+  document.getElementById('authSwitch').innerHTML = isReg?'已有账号？<button onclick="openAuth(\'login\')">直接登录</button>':'还没有账号？<button onclick="openAuth(\'register\')">立即注册</button>';
   document.getElementById('authError').textContent='';
   modal.classList.add('show');
 }
 function closeAuth(){ document.getElementById('authModal').classList.remove('show'); }
-function submitAuth(){
+async function submitAuth(){
   const email = document.getElementById('authEmail').value.trim();
   const pass = document.getElementById('authPass').value;
   const name = document.getElementById('regName').value.trim();
@@ -1212,37 +1652,136 @@ function submitAuth(){
   if(!email || !pass){ err.textContent='请填写邮箱与密码'; return; }
   if(pass.length<6){ err.textContent='密码至少 6 位'; return; }
   if(isReg && !name){ err.textContent='请填写昵称'; return; }
+
+  // 后端在线 → 调用 API
+  if(STATE.apiOnline){
+    err.textContent = '正在' + (isReg?'注册':'登录') + '…';
+    const r = await api('/api/' + (isReg?'register':'login'), { method:'POST', body:{ name, email, password: pass } });
+    if(!r.ok){
+      const map = { EMAIL_EXISTS:'该邮箱已注册', INVALID_CREDENTIALS:'邮箱或密码不正确', PASSWORD_TOO_SHORT:'密码至少 6 位', INVALID_INPUT:'请填写完整信息' };
+      err.textContent = map[r.data.error] || ('请求失败 ('+r.status+')');
+      return;
+    }
+    loginUser(r.data.user, r.data.token);
+    toast(isReg ? '注册成功 · 欢迎加入言葉' : '登录成功 · 进度已同步', 'ok');
+    closeAuth();
+    return;
+  }
+
+  // 后端离线 → localStorage 降级
   const users = JSON.parse(localStorage.getItem('lingua_users')||'{}');
   if(isReg){
     if(users[email]){ err.textContent='该邮箱已注册，请直接登录'; return; }
     users[email] = { name, pass };
     localStorage.setItem('lingua_users', JSON.stringify(users));
-    loginUser(name);
-    toast('注册成功 · 欢迎加入言葉','ok');
+    loginUser({ name, email, isAdmin:false });
+    toast('注册成功（离线模式 · 数据仅存本地）','ok');
   } else {
     if(!users[email]){ err.textContent='账号不存在，请先注册'; return; }
     if(users[email].pass !== pass){ err.textContent='密码不正确'; return; }
-    loginUser(users[email].name);
-    toast('登录成功 · 进度已同步','ok');
+    loginUser({ name:users[email].name, email, isAdmin:false });
+    toast('登录成功（离线模式）','ok');
   }
   closeAuth();
 }
-function loginUser(name){
-  STATE.user = { name };
-  localStorage.setItem('lingua_current', JSON.stringify({name}));
-  document.getElementById('chipName').textContent = name;
-  document.getElementById('chipAv').textContent = name.charAt(0).toUpperCase();
+function loginUser(user, token){
+  STATE.user = user;
+  if(token){ STATE.token = token; localStorage.setItem('lingua_token', token); }
+  localStorage.setItem('lingua_current', JSON.stringify(user));
+  document.getElementById('chipName').textContent = user.name;
+  document.getElementById('chipAv').textContent = user.name.charAt(0).toUpperCase();
   document.getElementById('userChip').classList.add('show');
   document.getElementById('navCta').classList.add('logged');
+  // 管理员 → 显示后台入口 + 加载数据
+  if(user.isAdmin){
+    document.getElementById('adminNav').style.display = 'inline-flex';
+    loadAdminData();
+  }
 }
 function logout(){
-  STATE.user=null;
+  STATE.user=null; STATE.token=null;
   localStorage.removeItem('lingua_current');
+  localStorage.removeItem('lingua_token');
   document.getElementById('userChip').classList.remove('show');
   document.getElementById('navCta').classList.remove('logged');
+  document.getElementById('adminNav').style.display = 'none';
+  document.getElementById('adminPanel').classList.remove('show');
   toast('已退出登录','ok');
 }
-function restoreUser(){ const cur = JSON.parse(localStorage.getItem('lingua_current')||'null'); if(cur){ loginUser(cur.name); } }
+async function restoreUser(){
+  const cur = JSON.parse(localStorage.getItem('lingua_current')||'null');
+  const token = localStorage.getItem('lingua_token');
+  if(!cur) return;
+  // 有 token + 后端在线 → 验证 token
+  if(token && STATE.apiOnline){
+    const r = await api('/api/me');
+    if(r.ok){ loginUser(r.data.user, token); return; }
+    // token 失效 → 清除
+    localStorage.removeItem('lingua_token');
+  }
+  // 降级：本地恢复
+  loginUser(cur);
+}
+
+/* ---------- API 状态 + 管理后台 ---------- */
+function updateApiStatus(){
+  const el = document.getElementById('apiStatus');
+  if(!el) return;
+  el.className = 'api-status ' + (STATE.apiOnline ? 'online' : 'offline');
+  el.title = STATE.apiOnline ? '后端已连接 · ' + API_BASE : '后端未连接 · 离线模式（数据仅存本地浏览器）';
+  // 显示提示横幅（首次离线时）
+  if(!STATE.apiOnline && !localStorage.getItem('lingua_api_dismissed')){
+    const banner = document.getElementById('apiBanner');
+    if(banner) banner.classList.add('show');
+  }
+}
+function dismissApiBanner(){ localStorage.setItem('lingua_api_dismissed','1'); document.getElementById('apiBanner').classList.remove('show'); }
+function toggleAdminPanel(){
+  document.getElementById('adminPanel').classList.toggle('show');
+  if(document.getElementById('adminPanel').classList.contains('show')) loadAdminData();
+}
+function switchAdminTab(tab){
+  document.querySelectorAll('.atab').forEach(t=>t.classList.toggle('active', t.dataset.atab===tab));
+  document.getElementById('adminUsers').style.display = tab==='users'?'block':'none';
+  document.getElementById('adminLogs').style.display = tab==='logs'?'block':'none';
+}
+async function loadAdminData(){
+  if(!STATE.apiOnline){ toast('后端未连接，无法加载后台数据','err'); return; }
+  const info = document.getElementById('apiBaseInfo');
+  if(info) info.textContent = 'API: ' + API_BASE;
+  // 统计
+  const stats = await api('/api/admin/stats');
+  if(stats.ok){
+    const s = stats.data;
+    document.getElementById('adminStats').innerHTML = `
+      <div class="admin-stat"><div class="v">${s.totalUsers}</div><div class="l">总注册用户</div></div>
+      <div class="admin-stat"><div class="v">${s.activeToday}</div><div class="l">今日活跃</div></div>
+      <div class="admin-stat"><div class="v">${s.loginsToday}</div><div class="l">今日登录次数</div></div>
+      <div class="admin-stat"><div class="v">${s.totalLogins}</div><div class="l">累计登录</div></div>`;
+  }
+  // 用户列表
+  const users = await api('/api/admin/users');
+  if(users.ok){
+    const list = users.data.users;
+    if(!list.length){
+      document.getElementById('adminUsers').innerHTML = '<div class="admin-empty">暂无注册用户</div>';
+    } else {
+      document.getElementById('adminUsers').innerHTML = `<table class="admin-table"><thead><tr><th>ID</th><th>昵称</th><th>邮箱</th><th>角色</th><th>语种</th><th>XP</th><th>连续</th><th>登录次数</th><th>最近登录</th><th>注册时间</th></tr></thead><tbody>${list.map(u=>`<tr><td>${u.id}</td><td>${u.name}</td><td>${u.email}</td><td>${u.is_admin?'<span class="badge-admin">ADMIN</span>':'学员'}</td><td>${u.lang||'—'}</td><td>${u.xp||0}</td><td>${u.streak||0}天</td><td>${u.login_count||0}</td><td>${u.last_login_at||'—'}</td><td>${u.created_at||'—'}</td></tr>`).join('')}</tbody></table>`;
+    }
+  }
+  // 登录日志
+  const logs = await api('/api/admin/login-logs');
+  if(logs.ok){
+    const list = logs.data.logs;
+    if(!list.length){
+      document.getElementById('adminLogs').innerHTML = '<div class="admin-empty">暂无登录记录</div>';
+    } else {
+      document.getElementById('adminLogs').innerHTML = `<table class="admin-table"><thead><tr><th>时间</th><th>用户</th><th>邮箱</th><th>IP</th></tr></thead><tbody>${list.map(l=>`<tr><td>${l.login_at}</td><td>${l.name}</td><td>${l.email}</td><td>${l.ip}</td></tr>`).join('')}</tbody></table>`;
+    }
+  }
+}
+
+/* ---------- Toast ---------- */
 let toastTimer=null;
 function toast(msg, type){
   const t = document.getElementById('toast');
@@ -1251,14 +1790,33 @@ function toast(msg, type){
   if(toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(()=>{ t.classList.remove('show'); }, 2600);
 }
+
+/* ---------- Reveal on scroll ---------- */
 function setupReveal(){
-  const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:0.12});
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 }
+
+/* ---------- Helpers ---------- */
 function scrollToId(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+// close modal on overlay click
 document.getElementById('authModal').addEventListener('click',(e)=>{ if(e.target.id==='authModal') closeAuth(); });
-document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeAuth(); });
-if('speechSynthesis' in window){ window.speechSynthesis.onvoiceschanged = ()=>{}; }
+// close admin panel on overlay click
+document.getElementById('adminPanel').addEventListener('click',(e)=>{ if(e.target.id==='adminPanel') toggleAdminPanel(); });
+// ESC closes modal & admin panel
+document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ closeAuth(); document.getElementById('adminPanel').classList.remove('show'); } });
+// set banner API base text
+document.getElementById('bannerApiBase').textContent = API_BASE.replace(/^https?:\/\//,'');
+
+// Voices may load async
+if('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged = ()=>{};
+}
+
+// boot
 init();
 </script>
 </body>
