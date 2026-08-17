@@ -548,6 +548,8 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
 .api-banner.show{display:block}
 .api-banner code{background:rgba(255,255,255,.15);padding:2px 6px;border-radius:3px;font-family:var(--mono);font-size:12px}
 </style>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
 </head>
 <body>
 
@@ -1076,32 +1078,95 @@ const STATE = {
   speakIdx: 0,
 };
 
-/* ---------- API 配置 ---------- */
-// 优先级：URL参数 ?api= > localStorage > 默认本地
-const API_BASE = new URLSearchParams(location.search).get('api')
-  || localStorage.getItem('lingua_api_base')
-  || 'http://localhost:3001';
+/* ---------- GitHub API 配置（仓库即数据库） ---------- */
+const GH = window.LINGUA_CONFIG || {};
+const GH_HEADERS = {
+  'Authorization': 'token ' + (GH.ghToken || ''),
+  'Content-Type': 'application/json',
+  'Accept': 'application/vnd.github.v3+json',
+};
 
-async function api(path, opts = {}) {
-  const token = STATE.token || localStorage.getItem('lingua_token') || '';
-  const res = await fetch(API_BASE + path, {
-    ...opts,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: 'Bearer ' + token } : {}),
-      ...(opts.headers || {}),
-    },
-    body: opts.body ? JSON.stringify(opts.body) : undefined,
-  });
-  return { ok: res.ok, status: res.status, data: await res.json().catch(() => ({})) };
+// 读取仓库文件，返回 {content: parsed_json, sha: string, raw: string} 或 null
+async function ghReadFile(path) {
+  try {
+    const res = await fetch(GH.ghApi + '/contents/' + path + '?ref=' + (GH.ghBranch || 'main'), {
+      headers: GH_HEADERS,
+    });
+    if (!res.ok) {
+      if (res.status === 404) return null;
+      return null;
+    }
+    const data = await res.json();
+    const raw = atob(data.content.replace(/\n/g, ''));
+    return { content: JSON.parse(raw), sha: data.sha, raw };
+  } catch (e) {
+    console.error('ghReadFile error:', e);
+    return null;
+  }
+}
+
+// 公开读取（不需要 token，使用 raw.githubusercontent.com）
+async function ghReadPublic(path) {
+  try {
+    const res = await fetch(GH.rawDataUrl + '/' + path + '?t=' + Date.now());
+    if (!res.ok) return null;
+    const text = await res.text();
+    return JSON.parse(text);
+  } catch (e) {
+    return null;
+  }
+}
+
+// 写入仓库文件（需要 sha 来更新已有文件）
+async function ghWriteFile(path, content, sha, message) {
+  try {
+    const body = {
+      message: message || 'update ' + path,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+      branch: GH.ghBranch || 'main',
+    };
+    if (sha) body.sha = sha;
+    const res = await fetch(GH.ghApi + '/contents/' + path, {
+      method: 'PUT',
+      headers: GH_HEADERS,
+      body: JSON.stringify(body),
+    });
+    return res.ok;
+  } catch (e) {
+    console.error('ghWriteFile error:', e);
+    return false;
+  }
+}
+
+// 带冲突重试的写入（读取最新 sha → 写入 → 失败则重试）
+async function ghWriteWithRetry(path, content, message, maxRetries) {
+  maxRetries = maxRetries || 3;
+  for (let i = 0; i < maxRetries; i++) {
+    const file = await ghReadFile(path);
+    const sha = file ? file.sha : null;
+    const ok = await ghWriteFile(path, content, sha, message);
+    if (ok) return true;
+    // 等待后重试
+    await new Promise(r => setTimeout(r, 500 * (i + 1)));
+  }
+  return false;
 }
 
 async function checkApi() {
   try {
-    const r = await fetch(API_BASE + '/api/health', { timeout: 3000 });
-    STATE.apiOnline = r.ok;
-  } catch { STATE.apiOnline = false; }
-  return STATE.apiOnline;
+    // 检查是否配置了 token
+    if (!GH.ghToken || GH.ghToken.length < 10) {
+      STATE.apiOnline = false;
+      return false;
+    }
+    // 用读取 users.json 来验证 token 和连接
+    const file = await ghReadFile('data/users.json');
+    STATE.apiOnline = file !== null;
+    return STATE.apiOnline;
+  } catch {
+    STATE.apiOnline = false;
+    return false;
+  }
 }
 
 const LANG_META = {
@@ -1643,96 +1708,162 @@ function openAuth(mode){
   modal.classList.add('show');
 }
 function closeAuth(){ document.getElementById('authModal').classList.remove('show'); }
-async function submitAuth(){
-  const email = document.getElementById('authEmail').value.trim();
+async function submitAuth() {
+  const email = document.getElementById('authEmail').value.trim().toLowerCase();
   const pass = document.getElementById('authPass').value;
   const name = document.getElementById('regName').value.trim();
-  const isReg = document.getElementById('regFields').style.display==='block';
+  const isReg = document.getElementById('regFields').style.display === 'block';
   const err = document.getElementById('authError');
-  if(!email || !pass){ err.textContent='请填写邮箱与密码'; return; }
-  if(pass.length<6){ err.textContent='密码至少 6 位'; return; }
-  if(isReg && !name){ err.textContent='请填写昵称'; return; }
+  if (!email || !pass) { err.textContent = '请填写邮箱与密码'; return; }
+  if (pass.length < 6) { err.textContent = '密码至少 6 位'; return; }
+  if (isReg && !name) { err.textContent = '请填写昵称'; return; }
 
-  // 后端在线 → 调用 API
-  if(STATE.apiOnline){
-    err.textContent = '正在' + (isReg?'注册':'登录') + '…';
-    const r = await api('/api/' + (isReg?'register':'login'), { method:'POST', body:{ name, email, password: pass } });
-    if(!r.ok){
-      const map = { EMAIL_EXISTS:'该邮箱已注册', INVALID_CREDENTIALS:'邮箱或密码不正确', PASSWORD_TOO_SHORT:'密码至少 6 位', INVALID_INPUT:'请填写完整信息' };
-      err.textContent = map[r.data.error] || ('请求失败 ('+r.status+')');
-      return;
+  // GitHub API 模式
+  if (STATE.apiOnline) {
+    err.textContent = '正在' + (isReg ? '注册' : '登录') + '…';
+
+    // 读取用户数据
+    const file = await ghReadFile('data/users.json');
+    if (!file) { err.textContent = '无法连接数据库，请稍后重试'; return; }
+    const users = file.content;
+
+    if (isReg) {
+      // 注册
+      if (users.find(u => u.email === email)) {
+        err.textContent = '该邮箱已注册，请直接登录';
+        return;
+      }
+      // 加密密码
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(pass, salt);
+      const newUser = {
+        id: users.length + 1,
+        name: name,
+        email: email,
+        passHash: hash,
+        isAdmin: users.length === 0, // 首位用户为管理员
+        createdAt: new Date().toISOString(),
+        lastLoginAt: null,
+        loginCount: 0,
+      };
+      users.push(newUser);
+
+      // 写入用户数据
+      const ok = await ghWriteFile('data/users.json', users, file.sha, 'register: ' + name);
+      if (!ok) { err.textContent = '注册失败，请重试'; return; }
+
+      // 记录登录日志
+      await logLogin(newUser);
+
+      loginUser({ id: newUser.id, name: newUser.name, email: newUser.email, isAdmin: newUser.isAdmin });
+      toast('注册成功 · 欢迎加入言葉', 'ok');
+    } else {
+      // 登录
+      const user = users.find(u => u.email === email);
+      if (!user) { err.textContent = '账号不存在，请先注册'; return; }
+      if (!bcrypt.compareSync(pass, user.passHash)) {
+        err.textContent = '密码不正确';
+        return;
+      }
+      // 记录登录日志
+      await logLogin(user);
+
+      // 更新用户登录信息
+      user.lastLoginAt = new Date().toISOString();
+      user.loginCount = (user.loginCount || 0) + 1;
+      await ghWriteWithRetry('data/users.json', users, 'login: ' + user.name);
+
+      loginUser({ id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin });
+      toast('登录成功 · 进度已同步', 'ok');
     }
-    loginUser(r.data.user, r.data.token);
-    toast(isReg ? '注册成功 · 欢迎加入言葉' : '登录成功 · 进度已同步', 'ok');
     closeAuth();
     return;
   }
 
-  // 后端离线 → localStorage 降级
-  const users = JSON.parse(localStorage.getItem('lingua_users')||'{}');
-  if(isReg){
-    if(users[email]){ err.textContent='该邮箱已注册，请直接登录'; return; }
-    users[email] = { name, pass };
-    localStorage.setItem('lingua_users', JSON.stringify(users));
-    loginUser({ name, email, isAdmin:false });
-    toast('注册成功（离线模式 · 数据仅存本地）','ok');
+  // 离线模式降级
+  const localUsers = JSON.parse(localStorage.getItem('lingua_users') || '{}');
+  if (isReg) {
+    if (localUsers[email]) { err.textContent = '该邮箱已注册，请直接登录'; return; }
+    localUsers[email] = { name, pass };
+    localStorage.setItem('lingua_users', JSON.stringify(localUsers));
+    loginUser({ name, email, isAdmin: false });
+    toast('注册成功（离线模式 · 数据仅存本地）', 'ok');
   } else {
-    if(!users[email]){ err.textContent='账号不存在，请先注册'; return; }
-    if(users[email].pass !== pass){ err.textContent='密码不正确'; return; }
-    loginUser({ name:users[email].name, email, isAdmin:false });
-    toast('登录成功（离线模式）','ok');
+    if (!localUsers[email]) { err.textContent = '账号不存在，请先注册'; return; }
+    if (localUsers[email].pass !== pass) { err.textContent = '密码不正确'; return; }
+    loginUser({ name: localUsers[email].name, email, isAdmin: false });
+    toast('登录成功（离线模式）', 'ok');
   }
   closeAuth();
 }
-function loginUser(user, token){
+
+// 记录登录日志
+async function logLogin(user) {
+  const file = await ghReadFile('data/login-logs.json');
+  const logs = file ? file.content : [];
+  logs.push({
+    id: logs.length + 1,
+    userId: user.id,
+    userName: user.name,
+    userEmail: user.email,
+    loginAt: new Date().toISOString(),
+    // ip 和 userAgent 在前端获取
+    userAgent: navigator.userAgent.substring(0, 100),
+  });
+  // 只保留最近 500 条
+  if (logs.length > 500) logs.splice(0, logs.length - 500);
+  await ghWriteWithRetry('data/login-logs.json', logs, 'login log: ' + user.name);
+}
+function loginUser(user) {
   STATE.user = user;
-  if(token){ STATE.token = token; localStorage.setItem('lingua_token', token); }
   localStorage.setItem('lingua_current', JSON.stringify(user));
   document.getElementById('chipName').textContent = user.name;
   document.getElementById('chipAv').textContent = user.name.charAt(0).toUpperCase();
   document.getElementById('userChip').classList.add('show');
   document.getElementById('navCta').classList.add('logged');
-  // 管理员 → 显示后台入口 + 加载数据
-  if(user.isAdmin){
+  // 管理员 → 显示后台入口
+  if (user.isAdmin) {
     document.getElementById('adminNav').style.display = 'inline-flex';
-    loadAdminData();
   }
 }
-function logout(){
-  STATE.user=null; STATE.token=null;
+function logout() {
+  STATE.user = null;
+  STATE.token = null;
   localStorage.removeItem('lingua_current');
   localStorage.removeItem('lingua_token');
   document.getElementById('userChip').classList.remove('show');
   document.getElementById('navCta').classList.remove('logged');
   document.getElementById('adminNav').style.display = 'none';
   document.getElementById('adminPanel').classList.remove('show');
-  toast('已退出登录','ok');
+  toast('已退出登录', 'ok');
 }
-async function restoreUser(){
-  const cur = JSON.parse(localStorage.getItem('lingua_current')||'null');
-  const token = localStorage.getItem('lingua_token');
-  if(!cur) return;
-  // 有 token + 后端在线 → 验证 token
-  if(token && STATE.apiOnline){
-    const r = await api('/api/me');
-    if(r.ok){ loginUser(r.data.user, token); return; }
-    // token 失效 → 清除
-    localStorage.removeItem('lingua_token');
+async function restoreUser() {
+  const cur = JSON.parse(localStorage.getItem('lingua_current') || 'null');
+  if (!cur) return;
+  // GitHub API 模式：从服务器验证用户是否仍存在
+  if (STATE.apiOnline) {
+    const file = await ghReadFile('data/users.json');
+    if (file) {
+      const user = file.content.find(u => u.email === cur.email);
+      if (user) {
+        loginUser({ id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin });
+        return;
+      }
+    }
   }
   // 降级：本地恢复
   loginUser(cur);
 }
 
 /* ---------- API 状态 + 管理后台 ---------- */
-function updateApiStatus(){
+function updateApiStatus() {
   const el = document.getElementById('apiStatus');
-  if(!el) return;
+  if (!el) return;
   el.className = 'api-status ' + (STATE.apiOnline ? 'online' : 'offline');
-  el.title = STATE.apiOnline ? '后端已连接 · ' + API_BASE : '后端未连接 · 离线模式（数据仅存本地浏览器）';
-  // 显示提示横幅（首次离线时）
-  if(!STATE.apiOnline && !localStorage.getItem('lingua_api_dismissed')){
+  el.title = STATE.apiOnline ? 'GitHub 数据库已连接' : '离线模式（数据仅存本地浏览器）';
+  if (!STATE.apiOnline && !localStorage.getItem('lingua_api_dismissed')) {
     const banner = document.getElementById('apiBanner');
-    if(banner) banner.classList.add('show');
+    if (banner) banner.classList.add('show');
   }
 }
 function dismissApiBanner(){ localStorage.setItem('lingua_api_dismissed','1'); document.getElementById('apiBanner').classList.remove('show'); }
@@ -1745,39 +1876,43 @@ function switchAdminTab(tab){
   document.getElementById('adminUsers').style.display = tab==='users'?'block':'none';
   document.getElementById('adminLogs').style.display = tab==='logs'?'block':'none';
 }
-async function loadAdminData(){
-  if(!STATE.apiOnline){ toast('后端未连接，无法加载后台数据','err'); return; }
+async function loadAdminData() {
+  if (!STATE.apiOnline) { toast('后端未连接，无法加载后台数据', 'err'); return; }
   const info = document.getElementById('apiBaseInfo');
-  if(info) info.textContent = 'API: ' + API_BASE;
+  if (info) info.textContent = 'GitHub API · 仓库即数据库';
+
+  // 读取用户数据
+  const usersFile = await ghReadFile('data/users.json');
+  const users = usersFile ? usersFile.content : [];
+
+  // 读取登录日志
+  const logsFile = await ghReadFile('data/login-logs.json');
+  const logs = logsFile ? logsFile.content : [];
+
   // 统计
-  const stats = await api('/api/admin/stats');
-  if(stats.ok){
-    const s = stats.data;
-    document.getElementById('adminStats').innerHTML = `
-      <div class="admin-stat"><div class="v">${s.totalUsers}</div><div class="l">总注册用户</div></div>
-      <div class="admin-stat"><div class="v">${s.activeToday}</div><div class="l">今日活跃</div></div>
-      <div class="admin-stat"><div class="v">${s.loginsToday}</div><div class="l">今日登录次数</div></div>
-      <div class="admin-stat"><div class="v">${s.totalLogins}</div><div class="l">累计登录</div></div>`;
-  }
+  const today = new Date().toISOString().slice(0, 10);
+  const loginsToday = logs.filter(l => (l.loginAt || '').slice(0, 10) === today).length;
+  const activeToday = new Set(logs.filter(l => (l.loginAt || '').slice(0, 10) === today).map(l => l.userEmail)).size;
+
+  document.getElementById('adminStats').innerHTML = `
+    <div class="admin-stat"><div class="v">${users.length}</div><div class="l">总注册用户</div></div>
+    <div class="admin-stat"><div class="v">${activeToday}</div><div class="l">今日活跃</div></div>
+    <div class="admin-stat"><div class="v">${loginsToday}</div><div class="l">今日登录次数</div></div>
+    <div class="admin-stat"><div class="v">${logs.length}</div><div class="l">累计登录</div></div>`;
+
   // 用户列表
-  const users = await api('/api/admin/users');
-  if(users.ok){
-    const list = users.data.users;
-    if(!list.length){
-      document.getElementById('adminUsers').innerHTML = '<div class="admin-empty">暂无注册用户</div>';
-    } else {
-      document.getElementById('adminUsers').innerHTML = `<table class="admin-table"><thead><tr><th>ID</th><th>昵称</th><th>邮箱</th><th>角色</th><th>语种</th><th>XP</th><th>连续</th><th>登录次数</th><th>最近登录</th><th>注册时间</th></tr></thead><tbody>${list.map(u=>`<tr><td>${u.id}</td><td>${u.name}</td><td>${u.email}</td><td>${u.is_admin?'<span class="badge-admin">ADMIN</span>':'学员'}</td><td>${u.lang||'—'}</td><td>${u.xp||0}</td><td>${u.streak||0}天</td><td>${u.login_count||0}</td><td>${u.last_login_at||'—'}</td><td>${u.created_at||'—'}</td></tr>`).join('')}</tbody></table>`;
-    }
+  if (!users.length) {
+    document.getElementById('adminUsers').innerHTML = '<div class="admin-empty">暂无注册用户</div>';
+  } else {
+    document.getElementById('adminUsers').innerHTML = `<table class="admin-table"><thead><tr><th>ID</th><th>昵称</th><th>邮箱</th><th>角色</th><th>登录次数</th><th>最近登录</th><th>注册时间</th></tr></thead><tbody>${users.map(u => `<tr><td>${u.id}</td><td>${u.name}</td><td>${u.email}</td><td>${u.isAdmin ? '<span class="badge-admin">ADMIN</span>' : '学员'}</td><td>${u.loginCount || 0}</td><td>${u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString('zh-CN') : '—'}</td><td>${u.createdAt ? new Date(u.createdAt).toLocaleString('zh-CN') : '—'}</td></tr>`).join('')}</tbody></table>`;
   }
+
   // 登录日志
-  const logs = await api('/api/admin/login-logs');
-  if(logs.ok){
-    const list = logs.data.logs;
-    if(!list.length){
-      document.getElementById('adminLogs').innerHTML = '<div class="admin-empty">暂无登录记录</div>';
-    } else {
-      document.getElementById('adminLogs').innerHTML = `<table class="admin-table"><thead><tr><th>时间</th><th>用户</th><th>邮箱</th><th>IP</th></tr></thead><tbody>${list.map(l=>`<tr><td>${l.login_at}</td><td>${l.name}</td><td>${l.email}</td><td>${l.ip}</td></tr>`).join('')}</tbody></table>`;
-    }
+  if (!logs.length) {
+    document.getElementById('adminLogs').innerHTML = '<div class="admin-empty">暂无登录记录</div>';
+  } else {
+    const recentLogs = logs.slice(-200).reverse();
+    document.getElementById('adminLogs').innerHTML = `<table class="admin-table"><thead><tr><th>时间</th><th>用户</th><th>邮箱</th><th>设备</th></tr></thead><tbody>${recentLogs.map(l => `<tr><td>${l.loginAt ? new Date(l.loginAt).toLocaleString('zh-CN') : '—'}</td><td>${l.userName || '—'}</td><td>${l.userEmail || '—'}</td><td>${(l.userAgent || '—').substring(0, 50)}</td></tr>`).join('')}</tbody></table>`;
   }
 }
 
@@ -1809,7 +1944,7 @@ document.getElementById('adminPanel').addEventListener('click',(e)=>{ if(e.targe
 // ESC closes modal & admin panel
 document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ closeAuth(); document.getElementById('adminPanel').classList.remove('show'); } });
 // set banner API base text
-document.getElementById('bannerApiBase').textContent = API_BASE.replace(/^https?:\/\//,'');
+document.getElementById('bannerApiBase').textContent = 'GitHub 仓库数据库';
 
 // Voices may load async
 if('speechSynthesis' in window){
