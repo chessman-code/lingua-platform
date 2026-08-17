@@ -549,7 +549,20 @@ footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:60px 0
 .api-banner code{background:rgba(255,255,255,.15);padding:2px 6px;border-radius:3px;font-family:var(--mono);font-size:12px}
 </style>
 <script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+<script>
+// Web Crypto API 密码加密（浏览器内置，无需外部依赖）
+async function hashPassword(password, salt) {
+  const enc = new TextEncoder();
+  const data = enc.encode(salt + password + ':lingua2026');
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function genSalt() {
+  const arr = new Uint8Array(16);
+  crypto.getRandomValues(arr);
+  return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+</script>
 </head>
 <body>
 
@@ -1733,13 +1746,14 @@ async function submitAuth() {
         err.textContent = '该邮箱已注册，请直接登录';
         return;
       }
-      // 加密密码
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(pass, salt);
+      // 加密密码（Web Crypto API SHA-256 + salt）
+      const salt = genSalt();
+      const hash = await hashPassword(pass, salt);
       const newUser = {
         id: users.length + 1,
         name: name,
         email: email,
+        passSalt: salt,
         passHash: hash,
         isAdmin: users.length === 0, // 首位用户为管理员
         createdAt: new Date().toISOString(),
@@ -1761,7 +1775,8 @@ async function submitAuth() {
       // 登录
       const user = users.find(u => u.email === email);
       if (!user) { err.textContent = '账号不存在，请先注册'; return; }
-      if (!bcrypt.compareSync(pass, user.passHash)) {
+      const hash = await hashPassword(pass, user.passSalt);
+      if (hash !== user.passHash) {
         err.textContent = '密码不正确';
         return;
       }
