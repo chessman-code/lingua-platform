@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "admin",
+    "email": "admin@test.com",
+    "passSalt": "e83a4a0fc6b8c57c0304ae5f7d2af047",
+    "passHash": "757e0c5c1963e1ba4476c92b3e04ff32402ee49b6ae3ab69725047d21bd93661",
+    "isAdmin": true,
+    "createdAt": "2026-08-17T09:49:16.781Z",
+    "lastLoginAt": null,
+    "loginCount": 0
+  }
+]
